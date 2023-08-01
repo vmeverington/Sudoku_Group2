@@ -72,11 +72,9 @@ class Main:
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if easy_rectangle.collidepoint(event.pos):
                         return "easy"
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if medium_rectangle.collidepoint(event.pos):
+                    elif medium_rectangle.collidepoint(event.pos):
                         return "medium"
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if hard_rectangle.collidepoint(event.pos):
+                    elif hard_rectangle.collidepoint(event.pos):
                         return "hard"
 
             pygame.display.update()
@@ -108,11 +106,14 @@ class Main:
                     pygame.quit()
                     sys.exit()
 
+
+
+
 if __name__ == '__main__':
     pygame.init()
 
     screen_width = 600
-    screen_height = 600
+    screen_height = 700
     screen = pygame.display.set_mode((screen_width, screen_height))
 
     pygame.display.set_caption("Sudoku")
