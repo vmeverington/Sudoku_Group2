@@ -81,6 +81,33 @@ class Main:
 
             pygame.display.update()
 
+    def draw_easy_screen(screen):
+        screen.fill((255, 255, 255))
+        pygame.display.flip()
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+    def draw_medium_screen(screen):
+        screen.fill((255, 255, 255))
+        pygame.display.flip()
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+    def draw_hard_screen(screen):
+        screen.fill((255, 255, 255))
+        pygame.display.flip()
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
 if __name__ == '__main__':
     pygame.init()
 
@@ -90,4 +117,18 @@ if __name__ == '__main__':
 
     pygame.display.set_caption("Sudoku")
 
-    Main.draw_start_screen(screen)
+    #Main.draw_start_screen(screen)
+
+    selected_difficulty = Main.draw_start_screen(screen)
+
+    if selected_difficulty == "easy":
+        pygame.display.set_caption("Sudoku - Easy")
+        Main.draw_easy_screen(screen)
+
+    elif selected_difficulty == "medium":
+        pygame.display.set_caption("Sudoku - Medium")
+        Main.draw_medium_screen(screen)
+
+    elif selected_difficulty == "hard":
+        pygame.display.set_caption("Sudoku - Hard")
+        Main.draw_hard_screen(screen)
