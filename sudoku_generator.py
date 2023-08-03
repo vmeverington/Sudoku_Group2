@@ -103,7 +103,7 @@ class SudokuGenerator:
 
 	Return: boolean
     '''
-    def is_valid(self, row, col, num):
+    def is_valid(self, row, col, num): #Justin Sui: I don't know how to do this one
         pass
 
     '''
@@ -117,7 +117,11 @@ class SudokuGenerator:
 	Return: None
     '''
     def fill_box(self, row_start, col_start):
-        pass
+        numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        random.shuffle(numbers)
+        for i in range(3):
+            for j in range(3):
+                self.board[row_start + i][col_start + j] = numbers.pop()
     
     '''
     Fills the three boxes along the main diagonal of the board
@@ -127,7 +131,8 @@ class SudokuGenerator:
 	Return: None
     '''
     def fill_diagonal(self):
-        pass
+        for i in range(0, self.row_length, 3):
+            self.fill_box(i, i)
 
     '''
     DO NOT CHANGE
@@ -193,7 +198,11 @@ class SudokuGenerator:
 	Return: None
     '''
     def remove_cells(self):
-        pass
+        cells = [(row, col) for row in range(self.row_length) for col in range(self.row_length)]
+        random.shuffle(cells)
+        for i in range(self.removed_cells):
+            row, col = cells[i]
+            self.board[row][col] = 0
 
 '''
 DO NOT CHANGE
