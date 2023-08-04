@@ -6,10 +6,7 @@ class Main:
     def __init__(self):
         pass
 
-    def draw_start_screen(screen):
-
-        menu_mouse_pos = pygame.mouse.get_pos()
-
+    def draw_start_screen(self, screen):
         # initialize fonts
         title_font = pygame.font.Font(None, 70)
         button_font = pygame.font.Font(None, 40)
@@ -31,7 +28,6 @@ class Main:
         easy_text = button_font.render("Easy", 0, (255, 255, 255))
         medium_text = button_font.render("Medium", 0, (255, 255, 255))
         hard_text = button_font.render("Hard", 0, (255, 255, 255))
-        # quit_text = button_font.render("Quit", 0, (255, 255, 255))
 
         # button BG color and text
         easy_surface = pygame.Surface((easy_text.get_size()[0] + 20, easy_text.get_size()[1] + 20))
@@ -46,29 +42,20 @@ class Main:
         hard_surface.fill((0, 0, 0))
         hard_surface.blit(hard_text, (10, 10))
 
-        # quit_surface = pygame.Surface((quit_text.get_size()[0] + 20, quit_text.get_size()[1] + 20))
-        # quit_surface.fill((0, 0, 0))
-        # quit_surface.blit(quit_text, (10, 10))
-
         # button rectangle
         easy_rectangle = easy_surface.get_rect(center=(screen_width // 2, screen_height // 2 + 25))
         medium_rectangle = medium_surface.get_rect(center=(screen_width // 2, screen_height // 2 + 100))
         hard_rectangle = hard_surface.get_rect(center=(screen_width // 2, screen_height // 2 + 175))
-        # quit_rectangle = quit_surface.get_rect(center=(screen_width // 2, screen_height // 2 + 200))
 
         # draw buttons
         screen.blit(easy_surface, easy_rectangle)
         screen.blit(medium_surface, medium_rectangle)
         screen.blit(hard_surface, hard_rectangle)
-        # screen.blit(quit_surface, quit_rectangle)
 
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                # elif event.type == pygame.MOUSEBUTTONDOWN:
-                # if quit_rectangle.collidepoint(event.pos):
-                # pygame.quit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if easy_rectangle.collidepoint(event.pos):
                         return "easy"
@@ -79,7 +66,7 @@ class Main:
 
             pygame.display.update()
 
-    def draw_easy_screen(screen):
+    def draw_easy_screen(self, screen):
         screen.fill((255, 255, 255))
         pygame.display.flip()
         while True:
@@ -88,7 +75,7 @@ class Main:
                     pygame.quit()
                     sys.exit()
 
-    def draw_medium_screen(screen):
+    def draw_medium_screen(self, screen):
         screen.fill((255, 255, 255))
         pygame.display.flip()
         while True:
@@ -97,7 +84,7 @@ class Main:
                     pygame.quit()
                     sys.exit()
 
-    def draw_hard_screen(screen):
+    def draw_hard_screen(self, screen):
         screen.fill((255, 255, 255))
         pygame.display.flip()
         while True:
@@ -106,7 +93,60 @@ class Main:
                     pygame.quit()
                     sys.exit()
 
+    def draw_win_screen(self, screen):
+        screen.fill((125, 199, 52))
 
+        #game won text
+        win_font = pygame.font.Font(None, 70)
+        win_surface = win_font.render('You Win!', 0, (0, 0, 0))
+        win_rectangle = win_surface.get_rect(center=(screen_width // 2, screen_height // 2 - 150))
+        screen.blit(win_surface, win_rectangle)
+
+        #exit button
+        button_font = pygame.font.Font(None, 40)
+        exit_text = button_font.render("Exit", 0, (255, 255, 255))
+        exit_surface = pygame.Surface((exit_text.get_size()[0] + 20, exit_text.get_size()[1] + 20))
+        exit_surface.fill((0, 0, 0))
+        exit_surface.blit(exit_text, (10, 10))
+        exit_rectangle = exit_surface.get_rect(center=(screen_width // 2, screen_height // 2 + 25))
+        screen.blit(exit_surface, exit_rectangle)
+
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if exit_rectangle.collidepoint(event.pos):
+                        pygame.quit()
+                        sys.exit()
+
+    def draw_lose_screen(self, screen):
+        screen.fill((125, 199, 52))
+
+        #game over text
+        lose_font = pygame.font.Font(None, 70)
+        lose_surface = lose_font.render('Game Over', 0, (0, 0, 0))
+        lose_rectangle = lose_surface.get_rect(center=(screen_width // 2, screen_height // 2 - 150))
+        screen.blit(lose_surface, lose_rectangle)
+
+        #restart button
+        button_font = pygame.font.Font(None, 40)
+        restart_text = button_font.render("Exit", 0, (255, 255, 255))
+        restart_surface = pygame.Surface((restart_text.get_size()[0] + 20, restart_text.get_size()[1] + 20))
+        restart_surface.fill((0, 0, 0))
+        restart_surface.blit(restart_text, (10, 10))
+        restart_rectangle = restart_surface.get_rect(center=(screen_width // 2, screen_height // 2 + 25))
+        screen.blit(restart_surface, restart_rectangle)
+
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if restart_rectangle.collidepoint(event.pos):
+                        self.draw_start_screen()
 
 
 if __name__ == '__main__':
@@ -117,8 +157,6 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode((screen_width, screen_height))
 
     pygame.display.set_caption("Sudoku")
-
-    #Main.draw_start_screen(screen)
 
     selected_difficulty = Main.draw_start_screen(screen)
 
