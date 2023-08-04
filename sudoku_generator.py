@@ -44,7 +44,7 @@ class SudokuGenerator:
 	Parameters: None
 	Return: None
     '''
-    def print_board(self):   #Justin Sui 8/03
+    def print_board(self):
         for row in self.board:
             print(row)
 
@@ -103,7 +103,7 @@ class SudokuGenerator:
 
 	Return: boolean
     '''
-    def is_valid(self, row, col, num): #Justin Sui: I don't know how to do this one
+    def is_valid(self, row, col, num):
         return (
             self.valid_in_row(row, num)
             and self.valid_in_col(col, num)
