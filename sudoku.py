@@ -311,7 +311,7 @@ def main():
 
                 if rectangle_list[2].collidepoint(event.pos):
                     # Quits the game when player pushes the exit button
-                    pygame.quit
+                    pygame.quit()
 
             # allows user to quit
             if (event.type == pygame.QUIT):
