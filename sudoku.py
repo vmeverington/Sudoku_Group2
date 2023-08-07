@@ -1,9 +1,53 @@
 import pygame,sys
 from sudoku_generator import*
 
+bg_color = (255,255,255) # white
 
-bg_color = (255,255,255)
+def set_board(screen,board,font):
+    # placing digits on the Sudoku board
+    for x in range(0, len(board[0])):
+        for y in range(0, len(board[0])):
 
+            # digit is between 1 and 9
+            if (board[x][y] > 0 and board[x][y] < 10):
+                # text rendering
+                value = font.render(str(board[x][y]), True, (100, 100, 200))
+                # print the digit on Sudoku Board
+                screen.blit(value, ((y + 1) * 50 + 15, (x + 1) * 50 + 5))
+
+def set_button(screen,screen_width,screen_height):
+    rect_list = []
+    button_font = pygame.font.SysFont('Helvetica', 15, bold=True)
+    # In Game Button Text
+    reset_text = button_font.render("Reset", 0, (255, 255, 255))
+    restart_text = button_font.render("Restart", 0, (255, 255, 255))
+    exit_text = button_font.render("Exit", 0, (255, 255, 255))
+
+    # In Game Button Background Color and Text
+    reset_surface = pygame.Surface((reset_text.get_size()[0] + 20, reset_text.get_size()[1] + 20))
+    reset_surface.fill((0, 0, 0))
+    reset_surface.blit(reset_text, (10, 10))
+
+    restart_surface = pygame.Surface((restart_text.get_size()[0] + 20, restart_text.get_size()[1] + 20))
+    restart_surface.fill((0, 0, 0))
+    restart_surface.blit(restart_text, (10, 10))
+
+    exit_surface = pygame.Surface((exit_text.get_size()[0] + 20, exit_text.get_size()[1] + 20))
+    exit_surface.fill((0, 0, 0))
+    exit_surface.blit(exit_text, (10, 10))
+
+    # In Game Button Rectangles
+    reset_rectangle = reset_surface.get_rect(center=(screen_width // 2 - 198, screen_height - 20))
+    restart_rectangle = restart_surface.get_rect(center=(screen_width // 2, screen_height - 20))
+    exit_rectangle = exit_surface.get_rect(center=(screen_width // 2 + 198, screen_height - 20))
+    rect_list.extend([reset_rectangle,restart_rectangle,exit_rectangle])
+
+    # Draws In Game Buttons
+    screen.blit(reset_surface, reset_rectangle)
+    screen.blit(restart_surface, restart_rectangle)
+    screen.blit(exit_surface, exit_rectangle)
+
+    return rect_list
 
 def place(window, pos,board,original):
     # Places numbers on the board
@@ -19,12 +63,12 @@ def place(window, pos,board,original):
 
             # if user wants to enter a value
             if event.type == pygame.KEYDOWN:
-                # case 1: trying to modify original value
+                # Modifying original value
                 if original[x - 1][y - 1] != 0:  # since the blank values are zeros
                     return
 
-                # case 2: Trying to edit previously entered digit
-                # 0 is mapped to 48 in ascii nomenclature so here we are checking with 0
+                # edit previously entered digit
+                # 0 is mapped to 48 ASCII
                 if (event.key == 48):
                     # erasing previosly entered value in backend
                     board[x - 1][y - 1] = event.key - 48
@@ -35,8 +79,8 @@ def place(window, pos,board,original):
                     pygame.display.update()
                     return
 
-                # case 3: Trying to enter a value in a blank cell
-                if (0 < event.key - 48 < 10):  # valid input
+                # enter a value in a blank cell
+                if (0 < event.key - 48 < 10):
                     # erasing previosly entered value on the screen
                     pygame.draw.rect(window, bg_color, (y * 50 + 5, x * 50 + 5, 50 - 10, 50 - 10))
 
@@ -45,7 +89,7 @@ def place(window, pos,board,original):
 
                     board[x - 1][y - 1] = event.key - 48
 
-                    # again displaying updated window
+                    # updated window
                     pygame.display.update()
                     return
 
@@ -192,68 +236,31 @@ def main():
     screen.fill(bg_color)
     font = pygame.font.SysFont('Helvetica', 50)
 
+    # Enter start screen and select difficulty
     selected_difficulty = draw_start_screen(screen,screen_width,screen_height)
 
     if selected_difficulty == "easy":
         pygame.display.set_caption("Sudoku - Easy")
-        board = generate_sudoku(81,30)
+        board = generate_sudoku(81,30) # Generates Easy Sudoku Board
 
     elif selected_difficulty == "medium":
         pygame.display.set_caption("Sudoku - Medium")
-        board = generate_sudoku(81,40)
+        board = generate_sudoku(81,40) # Generates Medium Sudoku Board
 
     elif selected_difficulty == "hard":
         pygame.display.set_caption("Sudoku - Hard")
-        board = generate_sudoku(81,50)
-    screen.fill(bg_color)
-    draw_grid(screen)
+        board = generate_sudoku(81,50) # Generates Hard Sudoku board
+    screen.fill(bg_color) # Clear Screen
+    draw_grid(screen) # Draw the grid to place the Sudoku board on
 
 
     # making a copy of the board for later use
 
     original = [[board[i][j] for j in range(len(board[0]))] for i in range(len(board))]
 
-    # placing digits on the Sudoku board
-    for x in range(0, len(board[0])):
-        for y in range(0, len(board[0])):
 
-            # if it is a digit is between 1 and 9
-            if (board[x][y] > 0 and board[x][y] < 10):
-                # text rendering
-                value = font.render(str(board[x][y]), True, (100, 100, 200))
-                # print the digit on Sudoku Board
-                screen.blit(value, ((y + 1) * 50 + 15, (x + 1) * 50 + 5))
-
-    button_font = pygame.font.SysFont('Helvetica', 15,bold=True)
-
-    # In Game Button Text
-    reset_text = button_font.render("Reset", 0, (255, 255, 255))
-    restart_text = button_font.render("Restart", 0, (255, 255, 255))
-    exit_text = button_font.render("Exit", 0, (255, 255, 255))
-
-    # In Game Button Background Color and Text
-    reset_surface = pygame.Surface((reset_text.get_size()[0] + 20, reset_text.get_size()[1] + 20))
-    reset_surface.fill((0, 0, 0))
-    reset_surface.blit(reset_text, (10, 10))
-
-    restart_surface = pygame.Surface((restart_text.get_size()[0] + 20, restart_text.get_size()[1] + 20))
-    restart_surface.fill((0, 0, 0))
-    restart_surface.blit(restart_text, (10, 10))
-
-    exit_surface = pygame.Surface((exit_text.get_size()[0] + 20, exit_text.get_size()[1] + 20))
-    exit_surface.fill((0, 0, 0))
-    exit_surface.blit(exit_text, (10, 10))
-
-    # In Game Button Rectangles
-    reset_rectangle = reset_surface.get_rect(center=(screen_width // 2 - 198, screen_height - 20))
-    restart_rectangle = restart_surface.get_rect(center=(screen_width // 2, screen_height - 20))
-    exit_rectangle = exit_surface.get_rect(center=(screen_width // 2 + 198, screen_height - 20))
-
-    # Draws In Game Buttons
-    screen.blit(reset_surface, reset_rectangle)
-    screen.blit(restart_surface, restart_rectangle)
-    screen.blit(exit_surface, exit_rectangle)
-
+    set_board(screen,board,font)
+    rectangle_list = set_button(screen,screen_width,screen_height)
     pygame.display.update()
 
 
@@ -270,30 +277,42 @@ def main():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Resets the board using the copy created at initiation
-                if reset_rectangle.collidepoint(event.pos):
+                if rectangle_list[0].collidepoint(event.pos):
                     board = original
                     screen.fill(bg_color)
                     draw_grid(screen)
-                if restart_rectangle.collidepoint(event.pos):
+                if rectangle_list[1].collidepoint(event.pos):
                     # Returns to the Start Screen to select a different difficulty level
                     selected_difficulty = draw_start_screen(screen, screen_width, screen_height)
 
                     if selected_difficulty == "easy":
                         pygame.display.set_caption("Sudoku - Easy")
                         board = generate_sudoku(81, 30)
-
+                        screen.fill(bg_color)
+                        draw_grid(screen)
+                        set_board(screen, board, font)
+                        set_button(screen, screen_width, screen_height)
+                        pygame.display.update()
                     elif selected_difficulty == "medium":
                         pygame.display.set_caption("Sudoku - Medium")
                         board = generate_sudoku(81, 40)
-
+                        screen.fill(bg_color)
+                        draw_grid(screen)
+                        set_board(screen, board, font)
+                        set_button(screen, screen_width, screen_height)
+                        pygame.display.update()
                     elif selected_difficulty == "hard":
                         pygame.display.set_caption("Sudoku - Hard")
                         board = generate_sudoku(81, 50)
-                    screen.fill(bg_color)
-                    draw_grid(screen)
-                if exit_rectangle.collidepoint(event.pos):
+                        screen.fill(bg_color)
+                        draw_grid(screen)
+                        set_board(screen, board, font)
+                        set_button(screen, screen_width, screen_height)
+
+                if rectangle_list[2].collidepoint(event.pos):
                     # Quits the game when player pushes the exit button
                     pygame.quit
+
             # allows user to quit
             if (event.type == pygame.QUIT):
                 pygame.quit()
