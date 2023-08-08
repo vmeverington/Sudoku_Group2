@@ -3,11 +3,85 @@ from sudoku_generator import*
 
 bg_color = (255,255,255) # white
 
+def row_check(board,num, row):
+
+    count = 0
+    for i in range(0,9):
+        if board[row][i] == num:
+            count+= 1
+    if count >= 2:
+        return False
+    return True
+
+def col_check(board,num,col):
+    count = 0
+    for i in range(0,9):
+        if board[i][col] == num:
+            count += 1
+    if count >= 2:
+        return False
+    return True
+
+def check_box(board,num,row,col):
+    # Looks for row,col of top left corner
+    # of each 3 x 3 box
+    count = 0
+    local_box_row = row - row % 3
+    local_box_col = col - col % 3
+    # loops through 3 x 3 grid
+    for i in range(local_box_row,local_box_row + 3):
+        for j in range(local_box_col,local_box_col + 3):
+            if board[i][j] == num:
+                count += 1
+    if count >= 2:
+        return False
+    return True
+
+def check_if_full(board):
+    # Checks if the board is full
+    for i in range(0,9):
+        for j in range(0,9):
+            if not str(board[i][j]).isdigit():
+                return False
+    return True
+
+def check_if_winner(board):
+    # Checks each row of completed board to see whether it is win or lose
+    for i in range(0, 9):
+        for j in range(1, 10):
+            if row_check(board, j, i) == False:
+                return False
+    # Checks each column of completed board to see whether it is win or lose
+    for i in range(0, 9):
+        for j in range(1, 10):
+            if col_check(board, j, i) == False:
+                return False
+    # Checks each box of completed board to see whether it is win or lose
+    for i in range(0, 9):
+        if check_box(board, i, 1, 1) == False:
+            return False
+        if check_box(board, i, 4, 1) == False:
+            return False
+        if check_box(board, i, 7, 1) == False:
+            return False
+        if check_box(board, i, 1, 4) == False:
+            return False
+        if check_box(board, i, 4, 4) == False:
+            return False
+        if check_box(board, i, 7, 4) == False:
+            return False
+        if check_box(board, i, 1, 7) == False:
+            return False
+        if check_box(board, i, 4, 7) == False:
+            return False
+        if check_box(board, i, 7, 7) == False:
+            return False
+    return True
+
 def set_board(screen,board,font):
-    # placing digits on the Sudoku board
+ # placing digits on the Sudoku board
     for x in range(0, len(board[0])):
         for y in range(0, len(board[0])):
-
             # digit is between 1 and 9
             if (board[x][y] > 0 and board[x][y] < 10):
                 # text rendering
@@ -49,12 +123,13 @@ def set_button(screen,screen_width,screen_height):
 
     return rect_list
 
-def place(window, pos,board,original):
+def place(window, pos,board,original,screen,screen_width,screen_height):
     # Places numbers on the board
     font = pygame.font.SysFont('Helvetica', 30)
     x, y = pos[1], pos[0]
 
     while True:
+
         for event in pygame.event.get():
             # if user has pressed quit button, quit the window
             if (event.type == pygame.QUIT):
@@ -91,6 +166,7 @@ def place(window, pos,board,original):
 
                     # updated window
                     pygame.display.update()
+                    pygame.event.pump()
                     return
 
 def draw_start_screen(screen,screen_width,screen_height):
@@ -198,6 +274,8 @@ def draw_lose_screen(screen,screen_width,screen_height):
                     if restart_rectangle.collidepoint(event.pos):
                       draw_start_screen(screen,screen_width,screen_height)
 
+            pygame.event.pump()
+
 def draw_win_screen(screen,screen_width,screen_height):
         screen.fill((125, 199, 52))
 
@@ -225,7 +303,7 @@ def draw_win_screen(screen,screen_width,screen_height):
                     if exit_rectangle.collidepoint(event.pos):
                         pygame.quit()
                         sys.exit()
-
+            pygame.event.pump()
 def main():
 
     pygame.init()
@@ -260,7 +338,7 @@ def main():
 
 
     set_board(screen,board,font)
-    rectangle_list = set_button(screen,screen_width,screen_height)
+    rectangle_list = set_button(screen,screen_width,screen_height) # List to store rectangle objects for comparison
     pygame.display.update()
 
 
@@ -273,7 +351,8 @@ def main():
                 # obtaining the coordinate from Mouse button click
                 coord = pygame.mouse.get_pos()
                 # floor division by 50 to place digit in cell
-                place(screen, (coord[0] // 50, coord[1] // 50),board,original)
+                place(screen, (coord[0] // 50, coord[1] // 50),board,original,screen,screen_width,screen_height)
+
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Resets the board using the copy created at initiation
@@ -318,5 +397,7 @@ def main():
                 pygame.quit()
                 return
 
+
+            pygame.event.pump()
 if __name__ == '__main__':
     main()
